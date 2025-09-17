@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Indodax Supabase Trading Monitor</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h1>Indodax OHLC Monitor</h1>
+  <canvas id="ohlcChart" width="800" height="400"></canvas>
+  <script>
+    const supabase = supabase.createClient('https://bnjgrqkksyyqmqznjdgu.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJuamdycWtrc3l5cW1xem5qZGd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY3MzQ4ODcsImV4cCI6MjA3MjMxMDg4N30.KPXvZDNVVvzbk7a2ybaP8mNx8ep9hW9QA97roSc0z7s');
+    async function loadData() {
+      const { data, error } = await supabase
+        .from('ohlc_data')
+        .select('*')
+        .order('time', { ascending: false })
+        .limit(100);
+      if (error) {
+        alert(error.message);
+        return;
+      }
+      // Simple Chart.js OHLC mapping
+      const labels = data.map(row => row.time).reverse();
+      const closes = data.map(row => row.close).reverse();
+      const chart = new Chart(document.getElementById('ohlcChart'), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Close Price',
+            data: closes,
+            borderColor: 'blue',
+            fill: false
+          }]
+        }
+      });
+    }
+    loadData();
+  </script>
+</body>
+</html>
