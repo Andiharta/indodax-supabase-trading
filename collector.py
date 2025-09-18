@@ -40,6 +40,3 @@ print("DEBUG Supabase insert result:", result)
 if name == "main":
 ohlc = fetch_indodax()
 save_to_supabase(ohlc)
-
-bantu modif script ini seperti nya ada error
-
